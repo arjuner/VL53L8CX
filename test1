@@ -1,0 +1,39 @@
+import time
+from machine import I2C
+
+VL53L8CX_I2C_DEFAULT_ADDRESS = 0x52  # Default I2C address for VL53L8CX
+
+class VL53L8CX:
+    def __init__(self, i2c, address=VL53L8CX_I2C_DEFAULT_ADDRESS):
+        self.i2c = i2c
+        self.address = address
+        if not self.is_alive():
+            raise RuntimeError("VL53L8CX not found on I2C bus.")
+        self.initialize()
+
+    def is_alive(self):
+        """Check if the sensor is responding."""
+        try:
+            # Read a known register (like the ID register)
+            self.i2c.writeto(self.address, b'\x00')
+            return True
+        except OSError:
+            return False
+
+    def initialize(self):
+        """Initialize the sensor with default settings."""
+        # Example configuration writes to sensor's registers
+        # Replace these steps with actual initialization steps as per the datasheet
+        print("Initializing VL53L8CX sensor...")
+
+    def get_distance(self):
+        """Trigger a measurement and return the distance."""
+        try:
+            # Replace with actual read register and parsing
+            self.i2c.writeto(self.address, b'\x00')  # Dummy command
+            data = self.i2c.readfrom(self.address, 2)
+            distance = int.from_bytes(data, "big")
+            return distance
+        except OSError:
+            return None
+
